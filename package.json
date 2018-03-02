@@ -1,14 +1,14 @@
 {
-  "name": "dojo-<< package-name >>",
+  "name": "@dojo/diagnostics",
   "version": "2.0.0-pre",
-  "description": "<< DESCRIPTION GOES HERE >>",
+  "description": "Diagnostic/Debugging support for Dojo2",
   "engines": {
     "npm": ">=3.0.0"
   },
   "private": true,
   "homepage": "http://dojo.io",
   "bugs": {
-    "url": "https://github.com/dojo/<< package-name >>/issues"
+    "url": "https://github.com/dojo/diagnostics/issues"
   },
   "license": "BSD-3-Clause",
   "main": "main.js",
@@ -19,22 +19,30 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/dojo/<< package-name >>.git"
+    "url": "https://github.com/dojo/diagnostics.git"
   },
   "scripts": {
-    "prepublish": "grunt peerDepInstall",
+    "prepublish": "dojo-install-peer-deps",
     "precommit": "lint-staged",
     "prettier": "prettier --write 'src/**/*.ts' 'tests/**/*.ts'",
-    "test": "grunt test"
+    "test": "npm run build && intern",
+    "test:local": "npm run build && intern config=intern.json@local",
+    "test:browserstack": "npm run build && intern config=intern.json@browserstack",
+    "lint": "tslint -p .",
+    "build:umd": "tsc",
+    "build:esm": "tsc -p tsconfig.esm.json",
+    "build:static": "copyfiles \"src/**/*.d.ts\" \"tests/**/*.html\" dist/dev && copyfiles \"src/**/*.d.ts\" -u 1 dist/release",
+    "build": "npm run build:umd && npm run build:esm && dojo-package && npm run build:static",
+    "watch": "dojo-tsc-watcher -p tsconfig.json -p tsconfig.esm.json -- dojo-package && npm run build:static",
+    "release": "dojo-can-publish-check && dojo-repo-is-clean-check && dojo-release",
+    "uploadCoverage": "cat coverage.json | node_modules/.bin/codecov"
   },
   "devDependencies": {
+    "@dojo/scripts": "~0.1.1",
     "@types/glob": "5.0.*",
-    "@types/grunt": "0.4.*",
     "codecov.io": "0.1.6",
     "@dojo/loader": "~0.1.1",
-    "grunt": "~1.0.1",
-    "grunt-dojo2": "latest",
-    "grunt-tslint": "5.0.1",
+    "copyfiles": "^1.2.0",
     "husky": "0.14.3",
     "intern": "~4.1.0",
     "lint-staged": "6.0.0",
@@ -55,5 +63,8 @@
     "parser": "typescript",
     "printWidth": 120,
     "arrowParens": "always"
+  },
+  "dependencies": {
+    "prettier": "^1.11.1"
   }
 }
