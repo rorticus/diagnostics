@@ -1,4 +1,4 @@
-type DiagnosticsSimpleObject = string | number | DiagnosticsMessageInfo;
+type DiagnosticsSimpleObject = string | number | boolean | Element | DiagnosticsMessageInfo;
 
 export interface DiagnosticsMessageInfo {
 	[key: string]: DiagnosticsSimpleObject | DiagnosticsSimpleObject[];
@@ -11,10 +11,15 @@ export interface BaseWidgetEvent {
 }
 
 export interface RenderWidgetEvent extends BaseWidgetEvent {
-	vdom: any;
+	dnode: any;
+}
+
+export interface ProjectorAttachedEvent extends BaseWidgetEvent {
+	attachPoint: string;
 }
 
 export interface DiagnosticEventTypes {
 	'render.widget': RenderWidgetEvent;
 	'invalidate.widget': BaseWidgetEvent;
+	'projector.attached': ProjectorAttachedEvent;
 }

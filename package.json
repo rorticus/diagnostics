@@ -35,7 +35,8 @@
     "build": "npm run build:umd && npm run build:esm && dojo-package && npm run build:static",
     "watch": "dojo-tsc-watcher -p tsconfig.json -p tsconfig.esm.json -- dojo-package && npm run build:static",
     "release": "dojo-can-publish-check && dojo-repo-is-clean-check && dojo-release",
-    "uploadCoverage": "cat coverage.json | node_modules/.bin/codecov"
+    "uploadCoverage": "cat coverage.json | node_modules/.bin/codecov",
+    "link": "cd dist/release && npm link"
   },
   "devDependencies": {
     "@dojo/scripts": "~0.1.1",
