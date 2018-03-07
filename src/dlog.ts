@@ -1,15 +1,18 @@
-import { WeakMap } from '@dojo/shim/WeakMap';
-import { DiagnosticEventTypes, DiagnosticsMessageInfo, DiagnosticsSimpleObject } from './interfaces';
+import { PostMessageOutputChannel } from './channels/output/PostMessageOutputChannel';
+import { DiagnosticOutputChannel, DiagnosticEventTypes, DiagnosticsMessageInfo } from './interfaces';
+
+const channels: DiagnosticOutputChannel[] = [];
+
+channels.push(new PostMessageOutputChannel());
 
 export function dlog<K extends keyof DiagnosticEventTypes>(eventId: K, info: DiagnosticEventTypes[K]): void;
 export function dlog(eventId: string, info: DiagnosticsMessageInfo): void {
-	window.postMessage(
-		{
-			source: 'dojo2-diagnostics',
-			eventId,
-			info: info,
-			ts: performance.now()
-		},
-		'*'
-	);
+	const message = {
+		source: 'dojo2-diagnostics',
+		eventId,
+		info: info,
+		ts: performance.now()
+	};
+
+	channels.forEach((channel) => channel.broadcast(message));
 }
